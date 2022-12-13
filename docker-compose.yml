@@ -229,7 +229,6 @@ services:
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
             - "docker-volume-backup.stop-during-backup=true"
-        command:
     
     backup:
         image: 'futurice/docker-volume-backup'
