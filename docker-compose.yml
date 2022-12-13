@@ -68,7 +68,7 @@ services:
             - '80:80'
             - '443:443'
             - '81:81'
-            - '8080:8080'
+            - '8090:80'
         links:
             - magento
         environment:
