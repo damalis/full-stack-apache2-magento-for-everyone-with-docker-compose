@@ -95,6 +95,28 @@ echo "============================================"
 echo ""
 sleep 2
 
+# set your magento public key
+public_key=""
+read -p 'Enter Magento Public Key(https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en): ' public_key
+while [[ ! ${#public_key} -ge 32 ]]
+do
+	echo "Try again"
+	read -p 'Enter Magento Public Key(https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en): ' public_key
+	sleep 1
+done
+echo "Ok."
+
+# set your magento private key
+private_key=""
+read -p 'Enter Magento Private Key(https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en): ' private_key
+while [[ ! ${#private_key} -ge 32 ]]
+do
+	echo "Try again"
+	read -p 'Enter Magento Private Key(https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en): ' private_key
+	sleep 1
+done
+echo "Ok."
+
 # set your domain name
 domain_name=""
 read -p 'Enter Domain Name(e.g. : example.com): ' domain_name
@@ -208,6 +230,8 @@ sed -i 's/example.com/'$domain_name'/g' ./phpmyadmin/apache2/sites-available/def
 
 cp env.example .env
 
+sed -i 's/public_key/'$public_key'/' .env
+sed -i 's/private_key/'$private_key'/' .env
 sed -i 's/example.com/'$domain_name'/' .env
 sed -i 's/email@domain.com/'$email'/' .env
 sed -i 's/db_username/'$db_username'/g' .env
