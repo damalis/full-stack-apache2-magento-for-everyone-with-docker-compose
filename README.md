@@ -35,6 +35,9 @@ Create rules to open ports to the internet, or to a specific IPv4 address or ran
 
 #### Magento authentication keys
 
+The repo.magento.com repository is where Adobe Commerce and Magento Open Source and third-party Composer packages are stored and requires authentication.
+Use your Commerce Marketplace account to generate a pair of 32-character authentication keys to access the repository
+
 Get your authentication keys: [https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en)
 
 #### Contents:
