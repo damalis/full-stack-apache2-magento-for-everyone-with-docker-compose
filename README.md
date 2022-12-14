@@ -40,6 +40,12 @@ Use your Commerce Marketplace account to generate a pair of 32-character authent
 
 Get your authentication keys: [https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en)
 
+#### How you set vm.max_map_count depends on your platform
+
+The following requirements and recommendations apply when running Elasticsearch in Docker in production.
+
+[https://www.elastic.co/guide/en/elasticsearch/reference/8.5/docker.html#_set_vm_max_map_count_to_at_least_262144](https://www.elastic.co/guide/en/elasticsearch/reference/8.5/docker.html#_set_vm_max_map_count_to_at_least_262144)
+
 #### Contents:
 
 - [Auto Configuration and Installation](#automatic)
