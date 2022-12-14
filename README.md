@@ -33,6 +33,10 @@ Create rules to open ports to the internet, or to a specific IPv4 address or ran
 - portainer: 9001
 - phpmyadmin: 9090
 
+#### Magento authentication keys
+
+Get your authentication keys: [https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en)
+
 #### Contents:
 
 - [Auto Configuration and Installation](#automatic)
