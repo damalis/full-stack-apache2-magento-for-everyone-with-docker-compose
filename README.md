@@ -233,7 +233,7 @@ docker compose up -d
 
 ### Website
 
-You should see the "Luma..." page in your browser. If not, please check if your PHP installation satisfies Magento's requirements.
+You should see the "Luma..." page in your browser. If not, please check if your PHP installation satisfies Magento's requirements or ```docker container restart varnish```
 
 ```
 https://example.com
