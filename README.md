@@ -279,7 +279,7 @@ Configure Varnish: [https://experienceleague.adobe.com/docs/commerce-operations/
 
 Magento Open Source 2.4; installations must be configured to use Elasticsearch.
 
-[https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/search-engine/overview.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/search-engine/overview.html?lang=en)
+[https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html](https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html)
 
 ### phpMyAdmin
 
