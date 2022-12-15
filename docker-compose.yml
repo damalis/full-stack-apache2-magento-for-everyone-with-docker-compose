@@ -28,17 +28,16 @@ services:
             test: ["CMD-SHELL", "curl -fk https://${DOMAIN_NAME} || exit 1"]
             interval: 10s
             timeout: 5s
-            retries: 5
-            start_period: 150s
+            retries: 6
+            start_period: 300s
         environment:
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
             - 'docker-volume-backup.stop-during-backup=true'
         command: >
-            bash -c "apt-get -y update && apt-get install -y zip unzip libicu-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev libxml2-dev libxslt1-dev && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install mysqli pdo_mysql intl -j$(nproc) gd zip xsl soap sockets && pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis mysqli pdo_mysql intl; curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && 
-            if [ \"$$(ls -A ${WEBSERVER_DOC_ROOT}/webapp)\" ]; then composer update --working-dir=${WEBSERVER_DOC_ROOT}/webapp; else composer config -g http-basic.repo.magento.com ${PUBLIC_KEY} ${PRIVATE_KEY} && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition ${WEBSERVER_DOC_ROOT}/webapp; fi && 
-            find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +; find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +; chown -R :www-data . ; chmod u+x bin/magento; 
-            bin/magento setup:install --base-url=https://${DOMAIN_NAME} --db-host=database --db-name=${DB_NAME} --db-user=${DB_USER} --db-password=${DB_PASSWORD} --admin-firstname=admin --admin-lastname=admin --admin-email=${LETSENCRYPT_EMAIL} --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=${LOCAL_TIMEZONE} --use-rewrites=1 --search-engine=elasticsearch7 --elasticsearch-host=elasticsearch --elasticsearch-port=9200 --elasticsearch-index-prefix=magento2 --elasticsearch-timeout=15; 
+            bash -c "apt-get -y update && apt-get install -y zip unzip libicu-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev libxml2-dev libxslt1-dev && docker-php-ext-configure gd --with-freetype --with-jpeg && docker-php-ext-install mysqli pdo_mysql intl -j$(nproc) gd zip xsl soap sockets bcmath && pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis; curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && 
+            if [ \"$$(ls -A ${WEBSERVER_DOC_ROOT}/.htaccess)\" ]; then composer update --working-dir=${WEBSERVER_DOC_ROOT}; else rm -f ${WEBSERVER_DOC_ROOT}/README.md && composer config -g http-basic.repo.magento.com ${PUBLIC_KEY} ${PRIVATE_KEY} && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition ${WEBSERVER_DOC_ROOT} && find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +; find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +; chown -R :www-data . ; chmod u+x bin/magento; 
+            bin/magento setup:install --base-url=https://${DOMAIN_NAME} --db-host=database --db-name=${DB_NAME} --db-user=${DB_USER} --db-password=${DB_PASSWORD} --admin-firstname=admin --admin-lastname=admin --admin-email=${LETSENCRYPT_EMAIL} --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=${LOCAL_TIMEZONE} --use-rewrites=1 --search-engine=elasticsearch7 --elasticsearch-host=elasticsearch --elasticsearch-port=9200 --elasticsearch-index-prefix=magento2 --elasticsearch-timeout=15; fi; 
             grep -qe 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; php-fpm"
 
     webserver:
@@ -71,6 +70,8 @@ services:
             - '8090:80'
         links:
             - magento
+            - varnish
+            - elasticsearch
         environment:
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
@@ -226,6 +227,7 @@ services:
             - '9300:9300'
         environment:
             discovery.type: 'single-node'
+            xpack.security.enabled: false
             ES_JAVA_OPTS: '-Xms512m -Xmx512m'
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
