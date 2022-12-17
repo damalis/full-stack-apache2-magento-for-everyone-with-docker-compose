@@ -239,6 +239,11 @@ You should see the "Luma..." page in your browser. If not, please check if your 
 https://example.com
 ```
 
+```
+Username: admin
+Password: admin123
+```
+
 add or remove code in the ./php-fpm/php/conf.d/security.ini file for custom php.ini configurations
 
 [https://www.php.net/manual/en/configuration.file.php](https://www.php.net/manual/en/configuration.file.php)
