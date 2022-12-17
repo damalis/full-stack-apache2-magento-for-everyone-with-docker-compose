@@ -64,6 +64,7 @@ Upgrading the applications and extensions you obtain from the Commerce Marketpla
 	- [Redis](#redis)
 	- [Varnish](#varnish)
 	- [Elasticsearch](#elasticsearch)
+	- [Mail](#mail)
 	- [phpMyAdmin](#phpmyadmin)
 	- [backup](#backup)					  
 
@@ -286,6 +287,10 @@ Configure Varnish: [https://experienceleague.adobe.com/docs/commerce-operations/
 Magento Open Source 2.4; installations must be configured to use Elasticsearch.
 
 [https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html](https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html)
+
+#### Mail
+
+The authorize screen, username: ${PMA_HTPASSWD_USERNAME} or password: ${PMA_HTPASSWD_PASSWORD} in the `.env` file.
 
 ### phpMyAdmin
 
