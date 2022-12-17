@@ -283,6 +283,7 @@ if [ -x "$(command -v docker)" ] && [ "$(docker compose version)" ]; then
 			echo "completed setup"
 			echo ""
 			echo "Website: https://$domain_name"
+			echo "Mail: https://mail.$domain_name"
 			echo "Portainer: https://$domain_name:9001"
 			echo "phpMyAdmin: https://$domain_name:9090"
 			echo ""
