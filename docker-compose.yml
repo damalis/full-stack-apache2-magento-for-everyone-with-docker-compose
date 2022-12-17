@@ -5,6 +5,7 @@ services:
     magento:
         depends_on:
             - database
+            - elasticsearch
         image: '${PHP_IMAGE_NAME}'
         container_name: magento
         networks:
@@ -22,6 +23,7 @@ services:
         ports:
             - '9000:80'
         links:
+            - webserver
             - database
             - redis
         healthcheck:
@@ -72,6 +74,7 @@ services:
             - magento
             - varnish
             - elasticsearch
+            - mail
         environment:
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
@@ -233,7 +236,7 @@ services:
         labels:            
             - "docker-volume-backup.stop-during-backup=true"
     
-    mailhog:
+    mail:
         image: 'mailhog/mailhog'
         container_name: mail
         networks:
@@ -245,9 +248,11 @@ services:
             - '8025:8025'
         environment:
             MH_HOSTNAME: 'mail.${DOMAIN_NAME}'
+            MH_AUTH_FILE: '/home/mailhog/${DOMAIN_NAME}-auth'
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
             - "docker-volume-backup.stop-during-backup=true"
+        command: "echo ${PMA_CONTROLUSER}:$(MailHog bcrypt ${PMA_CONTROLPASS}) > /home/mailhog/${DOMAIN_NAME}-auth"
         
     backup:
         image: 'futurice/docker-volume-backup'
