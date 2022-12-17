@@ -248,11 +248,10 @@ services:
             - '8025:8025'
         environment:
             MH_HOSTNAME: 'mail.${DOMAIN_NAME}'
-            MH_AUTH_FILE: '/home/mailhog/${DOMAIN_NAME}-auth'
             TZ: '${LOCAL_TIMEZONE}'
         labels:            
             - "docker-volume-backup.stop-during-backup=true"
-        command: "echo ${PMA_CONTROLUSER}:$(MailHog bcrypt ${PMA_CONTROLPASS}) > /home/mailhog/${DOMAIN_NAME}-auth"
+        entrypoint: sh -c "echo ${PMA_HTPASSWD_USERNAME}:$(MailHog bcrypt ${PMA_HTPASSWD_PASSWORD}) > /home/mailhog/${DOMAIN_NAME}-auth && MailHog -auth-file='/home/mailhog/${DOMAIN_NAME}-auth'"
         
     backup:
         image: 'futurice/docker-volume-backup'
