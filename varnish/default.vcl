@@ -18,9 +18,9 @@ backend default {
 }
 
 acl purge {
+    "localhost";
     "webserver";
     "magento";
-    "localhost";
     "127.0.0.1";
     "::1";
 }
@@ -65,12 +65,12 @@ sub vcl_recv {
     if (req.url ~ "/checkout") {
         return (pass);
     }
-	
-	# Bypass letsencrypt/certbot
+
+    # Bypass letsencrypt/certbot
     if (req.url ~ "^/\.well-known/acme-challenge/") {
         return (pass);
     }
-
+	
     # Bypass health check requests
     if (req.url ~ "/pub/health_check.php") {
         return (pass);
