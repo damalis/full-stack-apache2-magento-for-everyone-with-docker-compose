@@ -77,6 +77,9 @@ sudo mkdir -p /usr/local/lib/docker/cli-plugins
 sudo curl -SL "https://github.com/docker/compose/releases/download/v2.12.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/lib/docker/cli-plugins/docker-compose
 sudo chmod +x /usr/local/lib/docker/cli-plugins/docker-compose
 
+# permission for Docker daemon socket
+sudo chmod 666 /var/run/docker.sock
+
 echo ""
 echo "Done ✓"
 echo "============================================"
