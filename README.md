@@ -290,7 +290,7 @@ Magento Open Source 2.4; installations must be configured to use Elasticsearch.
 
 #### Mail
 
-SMTP settings; Host: mail, Port: 1025
+SMTP settings; ```Host: mail, Port: 1025```
 
 The authorize screen, ```username: ${PMA_HTPASSWD_USERNAME}``` or ```password: ${PMA_HTPASSWD_PASSWORD}``` in the `.env` file.
 
