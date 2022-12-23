@@ -246,6 +246,10 @@ Username: admin
 Password: admin123
 ```
 
+#### How to Disable 2F Authentication in Magento?
+
+exec ```bin/magento module:disable Magento_TwoFactorAuth  --clear-static-content``` in magento container.
+
 add or remove code in the ./php-fpm/php/conf.d/security.ini file for custom php.ini configurations
 
 [https://www.php.net/manual/en/configuration.file.php](https://www.php.net/manual/en/configuration.file.php)
