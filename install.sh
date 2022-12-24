@@ -38,7 +38,6 @@ elif [[ "$Installed" == "$Candidate" ]]; then
 	echo 'docker currently version already installed.'
 fi
 
-
 echo ""
 echo "Done ✓"
 echo "============================================"
