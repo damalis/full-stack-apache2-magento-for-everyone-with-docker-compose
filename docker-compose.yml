@@ -131,7 +131,7 @@ services:
         #    - database
         environment:
             #PMA_HOST: database
-            PMA_PMADB: phpmyadmin
+            PMA_PMADB: 'phpmyadmin'
             PMA_CONTROLUSER: '${PMA_CONTROLUSER}'
             PMA_CONTROLPASS: '${PMA_CONTROLPASS}'
             MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
