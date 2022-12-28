@@ -68,7 +68,7 @@ services:
         ports:
             - '80:80'
             - '443:443'
-            - '81:81'
+            - '90:90'
             - '8090:8090'
         links:
             - magento
@@ -77,8 +77,6 @@ services:
             - mail
         environment:
             TZ: '${LOCAL_TIMEZONE}'
-        labels:            
-            - "docker-volume-backup.stop-during-backup=true"
         command: bash -c "sh /tmp/ssl-conf.sh '${DOMAIN_NAME}' '${LETSENCRYPT_CONF_PREFIX}' '${HTTPD_PREFIX}/conf'"
     
     certbot:
@@ -95,7 +93,7 @@ services:
         restart: unless-stopped        
         environment:
             TZ: '${LOCAL_TIMEZONE}'
-        entrypoint: /bin/sh -c "certbot certonly --webroot --webroot-path /tmp/acme-challenge --rsa-key-size 4096 --non-interactive --agree-tos --no-eff-email --force-renewal --email ${LETSENCRYPT_EMAIL} -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME}; 
+        entrypoint: /bin/sh -c "certbot certonly --webroot --webroot-path /tmp/acme-challenge --rsa-key-size 4096 --non-interactive --agree-tos --no-eff-email --force-renewal --email ${LETSENCRYPT_EMAIL} -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} -d mail.${DOMAIN_NAME}; 
             trap exit TERM; while :; do certbot renew --dry-run; sleep 12h & wait $${!}; done;"
     
     phpmyadmin:
@@ -138,8 +136,6 @@ services:
             UPLOAD_LIMIT: '${PMA_UPLOAD_LIMIT}'
             MEMORY_LIMIT: '${PMA_MEMORY_LIMIT}'
             TZ: '${LOCAL_TIMEZONE}'
-        labels:            
-            - "docker-volume-backup.stop-during-backup=true"
         command: >
             bash -c "echo ${PMA_HTPASSWD_USERNAME}:phpmyadmin:$$( printf \"%s:%s:%s\" \"${PMA_HTPASSWD_USERNAME}\" \"phpmyadmin\" \"${PMA_HTPASSWD_PASSWORD}\" | md5sum | awk '{print $$1}' ) > ${PMA_CONF_FOLDER}/.htpasswd 
             && printf 'AuthType Digest\\nAuthName \"phpmyadmin\"\\nAuthDigestProvider file\\nAuthUserFile ${PMA_CONF_FOLDER}/.htpasswd\\nRequire valid-user\\n' > ${WEBSERVER_DOC_ROOT}/.htaccess && a2enmod auth_digest; 
@@ -192,8 +188,6 @@ services:
         environment:
             ALLOW_EMPTY_PASSWORD: 'yes'
             TZ: '${LOCAL_TIMEZONE}'
-        labels:            
-            - "docker-volume-backup.stop-during-backup=true"
         command: "redis-server ${REDIS_CONF_PREFIX}/redis/redis.conf"
     
     varnish:
@@ -214,8 +208,6 @@ services:
         environment:
             VARNISH_SIZE: '${VARNISH_SIZE}'
             TZ: '${LOCAL_TIMEZONE}'
-        labels:            
-            - "docker-volume-backup.stop-during-backup=true"
         command: "-a http=:8080,HTTP -p default_ttl=3600"
     
     elasticsearch:
@@ -233,8 +225,6 @@ services:
             xpack.security.enabled: false
             ES_JAVA_OPTS: '-Xms512m -Xmx512m'
             TZ: '${LOCAL_TIMEZONE}'
-        labels:            
-            - "docker-volume-backup.stop-during-backup=true"
         command: sh -c "elasticsearch-plugin list | grep -q analysis-icu || yes | elasticsearch-plugin install analysis-icu && elasticsearch-plugin list | grep -q analysis-phonetic || yes | elasticsearch-plugin install analysis-phonetic; /usr/local/bin/docker-entrypoint.sh 'eswrapper'"
         
     mail:
@@ -250,8 +240,6 @@ services:
         environment:
             MH_HOSTNAME: 'mail.${DOMAIN_NAME}'
             MH_AUTH_FILE: '${DOMAIN_NAME}-auth'
-        labels:            
-            - "docker-volume-backup.stop-during-backup=true"
         entrypoint: sh -c "echo ${PMA_HTPASSWD_USERNAME}:$(MailHog bcrypt ${PMA_HTPASSWD_PASSWORD}) > ${DOMAIN_NAME}-auth && MailHog"
         
     backup:
