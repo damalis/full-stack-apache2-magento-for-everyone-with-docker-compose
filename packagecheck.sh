@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES='zip unzip libicu-dev libfreetype6-dev libjpeg62-turbo-dev libpng-dev libzip-dev libxml2-dev libxslt1-dev golang git lsof'
+PACKAGES='zip unzip golang git lsof'
 
 notinstall_pkgs=""
 install=false
