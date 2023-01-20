@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PACKAGES='zip unzip golang git lsof'
+PACKAGES=$1
 
 notinstall_pkgs=""
 install=false

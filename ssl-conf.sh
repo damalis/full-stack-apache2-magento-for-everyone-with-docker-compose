@@ -42,7 +42,6 @@ wait_for_lets_encrypt() {
 	reload_webserver "$3"
 }
 
-
 if [ ! -d "$2/live/$1" ]; then
 	wait_for_lets_encrypt "$1" "$2" "$3" &
 else
