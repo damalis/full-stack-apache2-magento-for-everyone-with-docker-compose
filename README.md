@@ -361,6 +361,8 @@ add or remove code in the ```./webserver/extra/httpd-ssl.conf``` file for custom
 
 [https://mariadb.com/kb/en/configuring-mariadb-with-option-files/](https://mariadb.com/kb/en/configuring-mariadb-with-option-files/)
 
+[https://dev.mysql.com/doc/refman/8.3/en/](https://dev.mysql.com/doc/refman/8.3/en/)
+
 #### Redis
 
 you can usually find your Redis configuration in the following file: ```./redis/redis.conf```
@@ -382,7 +384,7 @@ docker container restart varnish
 
 Magento Open Source 2.4; installations must be configured to use Elasticsearch.
 
-[https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html](https://devdocs.magento.com/guides/v2.3/config-guide/elasticsearch/es-overview.html)
+[https://experienceleague.adobe.com/docs/commerce-operations/configuration-guide/search/configure-search-engine.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/configuration-guide/search/configure-search-engine.html?lang=en)
 
 #### Mail
 
