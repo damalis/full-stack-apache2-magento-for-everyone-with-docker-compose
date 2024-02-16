@@ -6,7 +6,6 @@ services:
         depends_on:
             database:
                 condition: service_healthy
-            - elasticsearch
         image: ${PHP_IMAGE_NAME}
         container_name: magento
         networks:
@@ -209,6 +208,9 @@ services:
         command: "redis-server ${REDIS_CONF_PREFIX}/redis/redis.conf"
 
     varnish:
+        depends_on:
+            magento:
+                condition: service_healthy
         image: varnish:${VARNISH_VERSION}
         container_name: varnish
         networks:
