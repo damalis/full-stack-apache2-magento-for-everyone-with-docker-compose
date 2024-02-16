@@ -8,6 +8,7 @@ backend default {
     .host = "webserver";
     .port = "90";
     .first_byte_timeout = 600s;
+    .connect_timeout = 2s;
     .probe = {
         .url = "/pub/health_check.php";
         .timeout = 2s;
