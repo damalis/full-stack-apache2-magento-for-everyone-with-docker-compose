@@ -394,7 +394,7 @@ do
 	which_db=$db
 	if [ $REPLY -eq 2 ]
 	then
-		db_version="8.0-oraclelinux8"
+		db_version="8.0"
 		db_authentication_plugin="caching_sha2_password"
 		db_authentication_password="BY '"$pma_password"'"
 		db_package_manager="microdnf install -y gettext"
