@@ -29,6 +29,7 @@ services:
             - database
             - redis
             - mail
+            - elasticsearch
         healthcheck:
             test: ["CMD-SHELL", "/bin/pidof php-fpm > /dev/null || exit 1"]
             interval: 5s
@@ -39,14 +40,14 @@ services:
         labels:
             - 'docker-volume-backup.stop-during-backup=true'
         command: >
-            bash -c "apt-get -y update && sh /tmp/packagecheck.sh 'zip unzip golang git lsof' && curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s gd mysqli pdo_mysql intl zip xsl soap sockets bcmath opcache && if pecl install -p -- redis; then pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis; fi; curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && 
+            bash -c "apt-get update && sh /tmp/packagecheck.sh 'zip unzip golang git lsof' && curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s gd mysqli pdo_mysql intl zip xsl soap sockets bcmath opcache && if pecl install -p -- redis; then pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis; fi; curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && 
             composer config -g http-basic.repo.magento.com ${PUBLIC_KEY} ${PRIVATE_KEY} && if [ \"$$(ls -A ${WEBSERVER_DOC_ROOT}/.user.ini)\" ]; then composer update --working-dir=${WEBSERVER_DOC_ROOT} && bin/magento setup:upgrade --keep-generated --magento-init-params=MAGE_DIRS[base][path]=${WEBSERVER_DOC_ROOT}; else rm -f ${WEBSERVER_DOC_ROOT}/README.md && go install github.com/mailhog/mhsendmail@latest && cp /root/go/bin/mhsendmail /usr/bin/mhsendmail && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition ${WEBSERVER_DOC_ROOT} && find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +; find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +; chown -R :www-data . ; chmod u+x bin/magento; 
-            bin/magento setup:install --base-url=https://${DOMAIN_NAME} --db-host=database --db-name=${DB_NAME} --db-user=${DB_USER} --db-password=${DB_PASSWORD} --admin-firstname=admin --admin-lastname=admin --admin-email=${LETSENCRYPT_EMAIL} --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=${LOCAL_TIMEZONE} --use-rewrites=1 --search-engine=elasticsearch7 --elasticsearch-host=webserver --elasticsearch-port=8090 --elasticsearch-index-prefix=magento2 --elasticsearch-timeout=15 && bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis; 
+            bin/magento setup:install --base-url=https://${DOMAIN_NAME} --db-host=database --db-name=${DB_NAME} --db-user=${DB_USER} --db-password=${DB_PASSWORD} --admin-firstname=admin --admin-lastname=admin --admin-email=${LETSENCRYPT_EMAIL} --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=${LOCAL_TIMEZONE} --use-rewrites=1 --search-engine=elasticsearch7 --elasticsearch-host=webserver --elasticsearch-port=8090 --elasticsearch-index-prefix=magento2 && bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis; 
             bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application 2 && bin/magento indexer:reindex; fi; grep -qe 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; php-fpm"
 
     webserver:
-        depends_on:
-            - varnish
+        #depends_on:
+        #    - varnish
         image: httpd:latest
         container_name: webserver
         networks:
@@ -73,8 +74,8 @@ services:
             - '90:90'
             - '8090:8090'
         links:
-            - magento
-            - varnish
+        #    - magento
+        #    - varnish
             - elasticsearch
             - mail
         environment:
@@ -83,7 +84,7 @@ services:
 
     certbot:
         depends_on:
-            - webserver
+            - varnish
         image: certbot/certbot:latest
         container_name: certbot
         networks:
@@ -152,6 +153,11 @@ services:
             a2enmod ssl && a2ensite default-ssl && a2dissite 000-default && /docker-entrypoint.sh 'apache2-foreground'"
 
     database:
+        depends_on:
+            - webserver
+            - elasticsearch
+            - redis
+            - mail
         image: ${DATABASE_IMAGE_NAME}:${DATABASE_VERSION}
         container_name: database
         networks:
@@ -246,7 +252,7 @@ services:
             ES_JAVA_OPTS: '-Xms512m -Xmx512m'
             TZ: '${LOCAL_TIMEZONE}'
         command: sh -c "elasticsearch-plugin list | grep -q analysis-icu || yes | elasticsearch-plugin install analysis-icu && elasticsearch-plugin list | grep -q analysis-phonetic || yes | elasticsearch-plugin install analysis-phonetic; /usr/local/bin/docker-entrypoint.sh 'eswrapper'"
-        
+
     mail:
         image: mailhog/mailhog:latest
         container_name: mail
@@ -261,7 +267,7 @@ services:
             MH_HOSTNAME: 'mail.${DOMAIN_NAME}'
             MH_AUTH_FILE: '${DOMAIN_NAME}-auth'
         entrypoint: sh -c "echo ${PMA_HTPASSWD_USERNAME}:$(MailHog bcrypt ${PMA_HTPASSWD_PASSWORD}) > ${DOMAIN_NAME}-auth && MailHog"
-        
+
     backup:
         image: offen/docker-volume-backup:latest
         container_name: backup
