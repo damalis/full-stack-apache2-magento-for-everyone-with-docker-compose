@@ -29,7 +29,6 @@ services:
             - database
             - redis
             - elasticsearch
-            - varnish
         healthcheck:
             test: ["CMD-SHELL", "/bin/pidof php-fpm > /dev/null || exit 1"]
             interval: 5s
