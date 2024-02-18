@@ -79,9 +79,9 @@ The following requirements and recommendations apply when running Elasticsearch 
 
 [https://www.elastic.co/guide/en/elasticsearch/reference/8.5/docker.html#_set_vm_max_map_count_to_at_least_262144](https://www.elastic.co/guide/en/elasticsearch/reference/8.5/docker.html#_set_vm_max_map_count_to_at_least_262144)
 
-#### 2 GB RAM
+#### 4 GB RAM (8 GB recommended) and CPU 2 cores (2 GHz each) (4 cores (2 GHz or more each))
 
-Upgrading the applications and extensions you obtain from the Commerce Marketplace and other sources can require up to 2 GB of RAM. If you are using a system with less than 4 GB of RAM, we recommend you create a [swap file](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04); otherwise, your upgrade might fail.
+Upgrading the applications and extensions you obtain from the Commerce Marketplace and other sources can require up to 4 GB of RAM. If you are using a system with less than 4 GB of RAM, we recommend you create a [swap file](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04); otherwise, your upgrade might fail.
 
 #### Contents:
 
