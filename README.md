@@ -76,9 +76,9 @@ Get your authentication keys: [https://experienceleague.adobe.com/docs/commerce-
 
 #### How you set vm.max_map_count depends on your platform
 
-The following requirements and recommendations apply when running Elasticsearch in Docker in production.
+The following requirements and recommendations apply when running Opensearch in Docker in production.
 
-[https://www.elastic.co/guide/en/elasticsearch/reference/8.5/docker.html#_set_vm_max_map_count_to_at_least_262144](https://www.elastic.co/guide/en/elasticsearch/reference/8.5/docker.html#_set_vm_max_map_count_to_at_least_262144)
+[https://docs.opensearch.org/docs/2.19/install-and-configure/install-opensearch/index/#important-settings](https://docs.opensearch.org/docs/2.19/install-and-configure/install-opensearch/index/#important-settings)
 
 #### 4 GB RAM (8 GB recommended) and CPU 2 cores (2 GHz each) (4 cores (2 GHz or more each) recommended)
 
