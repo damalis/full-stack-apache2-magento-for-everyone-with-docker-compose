@@ -9,9 +9,9 @@ If You want to build a website with Magento at short time;
 <a href="https://dev.mysql.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/2452804?s=200&v=4" alt="mysql" height="50" width="50"/> </a>&nbsp;&nbsp;&nbsp; 
 <a href="https://www.apache.org" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/47359?s=200&v=4" alt="apache2" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
 <a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/25158?s=200&v=4" alt="php" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
-<a href="https://redis.io" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/1529926?s=200&v=4" alt="redis" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
+<a href="https://valkey.io" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/164458127?s=200&v=4" alt="valkey" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
 <a href="https://www.varnish-software.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/577014?s=200&v=4" alt="varnish" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
-<a href="https://www.elastic.co/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/6764390?s=200&v=4" alt="elasticsearch" height="40" width="40"/>&nbsp;&nbsp;&nbsp; 
+<a href="https://opensearch.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/80134844?s=200&v=4" alt="opensearch" height="40" width="40"/>&nbsp;&nbsp;&nbsp; 
 <a href="#" target="_blank" rel="noreferrer"> <img src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/bash/bash.png" alt="Bash" height="50" width="50" /> </a>&nbsp;&nbsp;&nbsp; 
 <a href="https://www.php.net" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/25158?s=200&v=4" alt="php" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
 <a href="https://github.com/mailhog" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/10258541?s=200&v=4" alt="mailhog" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
@@ -27,7 +27,7 @@ Plus, manage docker containers with Portainer.
 <p align="left"> arm64/aarch64, x86-64 </p>
 
 #### Supported Linux Package Manage Systems:
-<p align="left"> apk, dnf, yum, apt/apt-get, zypper </p>
+<p align="left"> apk, dnf, yum, apt/apt-get, zypper, pacman </p>
  
 #### Supported Linux Operation Systems:
 <p align="left"> <a href="https://alpinelinux.org/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/7600810?s=200&v=4" alt="alpine linux" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
@@ -37,7 +37,8 @@ Plus, manage docker containers with Portainer.
 <a href="https://ubuntu.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/4604537?s=200&v=4" alt="ubuntu" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
 <a href="https://www.raspberrypi.com/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/1294177?s=200&v=4" alt="ubuntu" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
 <a href="https://www.redhat.com/en/technologies/linux-platforms/enterprise-linux" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/33972111?s=200&v=4" alt="redhat on s390x (IBM Z)" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
-<a href="https://www.suse.com/products/server/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/623819?s=200&v=4" alt="opensuse on s390x (IBM Z)" height="40" width="40"/> </a> </p>
+<a href="https://www.suse.com/products/server/" target="_blank" rel="noreferrer"> <img src="https://avatars.githubusercontent.com/u/623819?s=200&v=4" alt="opensuse on s390x (IBM Z)" height="40" width="40"/> </a>&nbsp;&nbsp;&nbsp; 
+<a href="https://archlinux.org/" target="_blank" rel="noreferrer"> <img src="https://gitlab.archlinux.org/uploads/-/system/group/avatar/23/iconfinder_archlinux_386451.png?width=48" alt="arch linux" height="40" width="40"/> </a> </p>
 
 ##### Note: Fedora 37, 39 and alpine linux x86-64 compatible, could not try sles IBM Z s390x, rhel IBM Z s390x and raspberrypi.
 
@@ -48,9 +49,9 @@ Plus, manage docker containers with Portainer.
 - [certbot (letsencrypt)](https://hub.docker.com/r/certbot/certbot)
 - [phpMyAdmin](https://hub.docker.com/r/phpmyadmin/phpmyadmin/)
 - [databaseMariadb](https://hub.docker.com/_/mariadb) [databaseMysql](https://hub.docker.com/_/mysql)
-- [redis](https://hub.docker.com/_/redis)
+- [valkey](https://hub.docker.com/r/valkey/valkey)
 - [varnish](https://hub.docker.com/_/varnish)
-- [elasticsearch](https://github.com/elastic)
+- [opensearch](https://hub.docker.com/r/opensearchproject/opensearch)
 - [mailhog](https://github.com/mailhog)
 - [backup](https://hub.docker.com/r/offen/docker-volume-backup)
 
@@ -93,9 +94,9 @@ Upgrading the applications and extensions you obtain from the Commerce Marketpla
 	- [Website](#website)
 	- [Webserver](#webserver)
 	- [Database](#database)
-	- [Redis](#redis)
+	- [Valkey](#valkey)
 	- [Varnish](#varnish)
-	- [Elasticsearch](#elasticsearch)
+	- [Opensearch](#opensearch)
 	- [Mail](#mail)
 	- [phpMyAdmin](#phpmyadmin)
 	- [backup](#backup)
@@ -158,10 +159,12 @@ LOCAL_TIMEZONE=[to see local timezones](https://docs.diladele.com/docker/timezon
 DIRECTORY_PATH=```pwd``` at command line\
 DATABASE_IMAGE_NAME=```mariadb``` or ```mysql```\
 DATABASE_CONT_NAME=```mariadb```, ```mysql``` or ```custom name```\
-DATABASE_VERSION=```10.6.17``` for mariadb, ```8.0``` for mysql\
+DATABASE_VERSION=```11.4.7``` for mariadb, ```8.4``` for mysql\
 DATABASE_PACKAGE_MANAGER=```apt-get update && apt-get install -y gettext-base``` for mariadb, ```microdnf install -y gettext``` for mysql\
 DATABASE_ADMIN_COMMANDLINE=```mariadb-admin``` for mariadb, ```mysqladmin``` for mysql\
-VARNISH_VERSION=```latest``` for centos version 9+ and fedora, ```stable``` for the others
+VARNISH_VERSION=```latest``` for centos version 9+ and fedora, ```stable``` for the others\
+SSL_SNIPPET=```echo 'Generated Self-signed SSL Certificate for localhost'``` for localhost\
+SSL_SNIPPET=```certbot certonly --webroot --webroot-path /tmp/acme-challenge --rsa-key-size 4096 --non-interactive --agree-tos --no-eff-email --force-renewal --email ${LETSENCRYPT_EMAIL} -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} -d mail.${DOMAIN_NAME}``` for remotehost
 
 and
 
@@ -182,6 +185,8 @@ Firstly: will create external volume
 ```
 docker volume create --driver local --opt type=none --opt device=${PWD}/certbot --opt o=bind certbot-etc
 ```
+
+for localhost ssl: Generate Self-signed SSL Certificate with guide [mkcert repository](https://github.com/FiloSottile/mkcert).
 
 ```
 docker compose up -d
@@ -277,6 +282,14 @@ to remove portainer and the other images:
 docker rmi $(docker image ls -q)
 ```
 
+### Logs containers
+
+To fetch the logs of a container.
+
+```
+docker container logs container_name_or_id
+```
+
 ### Project from existing source
 
 Copy all files into a new directory:
@@ -301,7 +314,7 @@ https://example.com
 
 How to retrieve admin URI?
 
-You can get it from app/etc/env.php file,
+You can get it from ```./magento/app/etc/env.php``` file,
 
 You have to get frontname from this file and suffix in your base url.
 
@@ -361,12 +374,12 @@ add or remove code in the ```./webserver/extra/httpd-ssl.conf``` file for custom
 
 [https://mariadb.com/kb/en/configuring-mariadb-with-option-files/](https://mariadb.com/kb/en/configuring-mariadb-with-option-files/)
 
-[https://dev.mysql.com/doc/refman/8.3/en/](https://dev.mysql.com/doc/refman/8.3/en/)
+[https://dev.mysql.com/doc/](https://dev.mysql.com/doc/)
 
-#### Redis
+#### Valkey
 
-you can usually find your Redis configuration in the following file: ```./redis/redis.conf```
-To optimize the Redis instance for your requirements, you get best results by using a dedicated instance for each session, Commerce cache and FPC.
+you can usually find your Valkey configuration in the following file: ```./valkey/valkey.conf```
+To optimize the Valkey instance for your requirements, you get best results by using a dedicated instance for each session, Commerce cache and FPC.
 
 [https://experienceleague.adobe.com/docs/commerce-operations/configuration-guide/cache/redis/config-redis.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/configuration-guide/cache/redis/config-redis.html?lang=en)
 
@@ -380,9 +393,9 @@ after every change in the Magento and the varnish configuration or if You get er
 docker container restart varnish
 ```
 
-#### Elasticsearch
+#### Opensearch
 
-Magento Open Source 2.4; installations must be configured to use Elasticsearch.
+Magento Open Source 2.4; installations must be configured to use Opensearch.
 
 [https://experienceleague.adobe.com/docs/commerce-operations/configuration-guide/search/configure-search-engine.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/configuration-guide/search/configure-search-engine.html?lang=en)
 

@@ -25,8 +25,8 @@ services:
             - '9000:80'
         links:
             - database
-            - redis
-            - elasticsearch
+            - valkey
+            - opensearch
         healthcheck:
             test: ["CMD-SHELL", "/bin/pidof php-fpm > /dev/null || exit 1"]
             interval: 5s
@@ -37,10 +37,10 @@ services:
         labels:
             - 'docker-volume-backup.stop-during-backup=true'
         command: >
-            bash -c "apt-get update && sh /tmp/packagecheck.sh 'zip unzip golang git lsof' && curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s gd mysqli pdo_mysql intl zip xsl soap sockets bcmath opcache && if pecl install -p -- redis; then pecl install -o -f redis && rm -rf /tmp/pear && docker-php-ext-enable redis; fi; curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && 
-            composer config -g http-basic.repo.magento.com ${PUBLIC_KEY} ${PRIVATE_KEY} && if [ \"$$(ls -A ${WEBSERVER_DOC_ROOT}/.user.ini)\" ]; then composer update --working-dir=${WEBSERVER_DOC_ROOT} && bin/magento setup:upgrade --keep-generated --magento-init-params=MAGE_DIRS[base][path]=${WEBSERVER_DOC_ROOT}; else rm -f ${WEBSERVER_DOC_ROOT}/README.md && go install github.com/mailhog/mhsendmail@latest && cp /root/go/bin/mhsendmail /usr/bin/mhsendmail && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition ${WEBSERVER_DOC_ROOT} && find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +; find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +; chown -R :www-data . ; chmod u+x bin/magento; 
-            bin/magento setup:install --base-url=https://${DOMAIN_NAME} --db-host=database --db-name=${DB_NAME} --db-user=${DB_USER} --db-password=${DB_PASSWORD} --admin-firstname=admin --admin-lastname=admin --admin-email=${LETSENCRYPT_EMAIL} --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=${LOCAL_TIMEZONE} --use-rewrites=1 --search-engine=elasticsearch7 --elasticsearch-host=elasticsearch --elasticsearch-port=9200 --elasticsearch-index-prefix=magento2 && bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=redis; 
-            bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application 2 && bin/magento indexer:reindex; fi; grep -qe 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; php-fpm"
+            bash -c "apt-get update && sh /tmp/packagecheck.sh 'zip unzip golang git lsof' && curl -sSL https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions -o - | sh -s gd mysqli pdo_mysql intl zip xsl soap sockets bcmath opcache redis ftp && curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && 
+            composer config -g http-basic.repo.magento.com ${PUBLIC_KEY} ${PRIVATE_KEY} && if [ \"$$(ls -A ${WEBSERVER_DOC_ROOT}/.user.ini)\" ]; then composer update --working-dir=${WEBSERVER_DOC_ROOT} && bin/magento setup:upgrade --keep-generated --magento-init-params=MAGE_DIRS[base][path]=${WEBSERVER_DOC_ROOT}; else rm -f ${WEBSERVER_DOC_ROOT}/README.md && go install github.com/mailhog/mhsendmail@latest && cp /root/go/bin/mhsendmail /usr/bin/mhsendmail && composer create-project --repository-url=https://repo.magento.com/ magento/project-community-edition:2.4.8 ${WEBSERVER_DOC_ROOT} && find var generated vendor pub/static pub/media app/etc -type f -exec chmod g+w {} +; find var generated vendor pub/static pub/media app/etc -type d -exec chmod g+ws {} +; chown -R :www-data . ; chmod u+x bin/magento; 
+            bin/magento setup:install --base-url=https://${DOMAIN_NAME} --db-host=database --db-name=${DB_NAME} --db-user=${DB_USER} --db-password=${DB_PASSWORD} --admin-firstname=admin --admin-lastname=admin --admin-email=${LETSENCRYPT_EMAIL} --admin-user=admin --admin-password=admin123 --language=en_US --currency=USD --timezone=${LOCAL_TIMEZONE} --use-rewrites=1 --search-engine=opensearch --opensearch-host=opensearch --opensearch-port=9200 --opensearch-index-prefix=magento2 && bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=valkey --http-cache-hosts=webserver:90; 
+            bin/magento config:set --scope=default --scope-code=0 system/full_page_cache/caching_application 2 && bin/magento indexer:reindex; fi; grep -qxF 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; php-fpm"
 
     webserver:
         depends_on:
@@ -96,8 +96,7 @@ services:
             retries: 20
         environment:
             TZ: '${LOCAL_TIMEZONE}'
-        entrypoint: /bin/sh -c "certbot certonly --webroot --webroot-path /tmp/acme-challenge --rsa-key-size 4096 --non-interactive --agree-tos --no-eff-email --force-renewal --email ${LETSENCRYPT_EMAIL} -d ${DOMAIN_NAME} -d www.${DOMAIN_NAME} -d mail.${DOMAIN_NAME}; 
-            trap exit TERM; while :; do certbot renew --dry-run; sleep 12h & wait $${!}; done;"
+        entrypoint: /bin/sh -c "${SSL_SNIPPET}; trap exit TERM; while :; do certbot renew --dry-run; sleep 12h & wait $${!}; done;"
 
     phpmyadmin:
         depends_on:
@@ -144,13 +143,13 @@ services:
             bash -c "echo ${PMA_HTPASSWD_USERNAME}:phpmyadmin:$$( printf \"%s:%s:%s\" \"${PMA_HTPASSWD_USERNAME}\" \"phpmyadmin\" \"${PMA_HTPASSWD_PASSWORD}\" | md5sum | awk '{print $$1}' ) > ${PMA_CONF_FOLDER}/.htpasswd 
             && printf 'AuthType Digest\\nAuthName \"phpmyadmin\"\\nAuthDigestProvider file\\nAuthUserFile ${PMA_CONF_FOLDER}/.htpasswd\\nRequire valid-user\\n' > ${WEBSERVER_DOC_ROOT}/.htaccess && a2enmod auth_digest; 
             mkdir -p ${WEBSERVER_DOC_ROOT}/../upload && chown www-data:www-data ${WEBSERVER_DOC_ROOT}/../upload && chmod a+w ${WEBSERVER_DOC_ROOT}/../upload; mkdir -p ${WEBSERVER_DOC_ROOT}/../save && chown www-data:www-data ${WEBSERVER_DOC_ROOT}/../save && chmod a+w ${WEBSERVER_DOC_ROOT}/../save; 
-            grep -qxF 'ServerName 127.0.0.1' ${APACHE_CONFDIR_PREFIX}/apache2.conf || echo -e '\\nServerName 127.0.0.1' >> ${APACHE_CONFDIR_PREFIX}/apache2.conf; grep -qe 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; 
+            grep -qxF 'ServerName 127.0.0.1' ${APACHE_CONFDIR_PREFIX}/apache2.conf || echo -e '\\nServerName 127.0.0.1' >> ${APACHE_CONFDIR_PREFIX}/apache2.conf; grep -qxF 'date.timezone = ${LOCAL_TIMEZONE}' ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini || echo 'date.timezone = ${LOCAL_TIMEZONE}' >> ${PHP_INI_DIR_PREFIX}/php/conf.d/security.ini; 
             a2enmod ssl && a2ensite default-ssl && a2dissite 000-default && /docker-entrypoint.sh 'apache2-foreground'"
 
     database:
         depends_on:
-            - elasticsearch
-            - redis
+            - opensearch
+            - valkey
             - mail
         image: ${DATABASE_IMAGE_NAME}:${DATABASE_VERSION}
         container_name: database
@@ -160,8 +159,8 @@ services:
             - 'db:/var/lib/mysql'
             - 'db-backup-data:/tmp/backup'
             - type: bind
-              source: ./database/conf.d/z-mysql.cnf
-              target: '${MYSQL_CONF_PREFIX}/z-mysql.cnf'
+              source: ./database/conf.d/z-${DATABASE_IMAGE_NAME}.cnf
+              target: '${MYSQL_CONF_PREFIX}/z-${DATABASE_IMAGE_NAME}.cnf'
             - 'phpmyadmin-sql:/docker-entrypoint-initdb.d'
         hostname: database
         restart: unless-stopped
@@ -184,19 +183,19 @@ services:
             - "docker-volume-backup.stop-during-backup=true"
             - "docker-volume-backup.archive-pre=/bin/sh -c 'mysqldump -uroot -p${MYSQL_ROOT_PASSWORD} --all-databases > /tmp/backup/db_backup_data.sql'"
             - "docker-volume-backup.exec-label=database"
-        command: bash -c "${DATABASE_PACKAGE_MANAGER} && export PMA_CONTROLUSER=${PMA_CONTROLUSER} export PMA_CONTROLPASS=${PMA_CONTROLPASS} && envsubst '$$PMA_CONTROLUSER,$$PMA_CONTROLPASS' < /docker-entrypoint-initdb.d/create_tables.sql.template > /docker-entrypoint-initdb.d/create_tables.sql && docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
+        command: bash -c "${DATABASE_PACKAGE_MANAGER} && chmod 0444 ${MYSQL_CONF_PREFIX}/z-${DATABASE_IMAGE_NAME}.cnf && export PMA_CONTROLUSER=${PMA_CONTROLUSER} export PMA_CONTROLPASS=${PMA_CONTROLPASS} && envsubst '$$PMA_CONTROLUSER,$$PMA_CONTROLPASS' < /docker-entrypoint-initdb.d/create_tables.sql.template > /docker-entrypoint-initdb.d/create_tables.sql && docker-entrypoint.sh --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci"
 
-    redis:
-        image: redis:latest
-        container_name: redis
+    valkey:
+        image: valkey/valkey:latest
+        container_name: valkey
         networks:
             - backend
         volumes:
-            - 'dtredis:/data'
+            - 'dtvalkey:/data'
             - type: bind
-              source: ./redis
-              target: '${REDIS_CONF_PREFIX}/redis'
-        hostname: redis
+              source: ./valkey
+              target: '${VALKEY_CONF_PREFIX}/valkey'
+        hostname: valkey
         sysctls:
             - net.core.somaxconn=512
         restart: unless-stopped
@@ -205,7 +204,7 @@ services:
         environment:
             ALLOW_EMPTY_PASSWORD: 'yes'
             TZ: '${LOCAL_TIMEZONE}'
-        command: "redis-server ${REDIS_CONF_PREFIX}/redis/redis.conf"
+        command: "valkey-server ${VALKEY_CONF_PREFIX}/valkey/valkey.conf"
 
     varnish:
         depends_on:
@@ -224,27 +223,40 @@ services:
         restart: unless-stopped
         ports:
             - '8080:80'
+        ulimits:
+            memlock:
+                 soft: -1
+                 hard: -1
         environment:
             VARNISH_SIZE: '${VARNISH_SIZE}'
             TZ: '${LOCAL_TIMEZONE}'
         command: "-a http=:8080,HTTP -p default_ttl=3600 -n /tmp/varnish_workdir"
 
-    elasticsearch:
-        image: elasticsearch:7.17.18
-        container_name: elasticsearch
+    opensearch:
+        image: opensearchproject/opensearch:2.19.2
+        container_name: opensearch
         networks:
             - backend
-        hostname: elasticsearch
+        hostname: opensearch
         restart: unless-stopped
         ports:
             - '9200:9200'
-            - '9300:9300'
+            - '9600:9600'
+        ulimits:
+            memlock:
+                soft: -1
+                hard: -1
+            nofile:
+                soft: 65536
+                hard: 65536
         environment:
             discovery.type: 'single-node'
-            xpack.security.enabled: false
-            ES_JAVA_OPTS: '-Xms512m -Xmx512m'
+            bootstrap.memory_lock: true
+            DISABLE_INSTALL_DEMO_CONFIG: true
+            DISABLE_SECURITY_PLUGIN: true
+            OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
             TZ: '${LOCAL_TIMEZONE}'
-        command: sh -c "elasticsearch-plugin list | grep -q analysis-icu || yes | elasticsearch-plugin install analysis-icu && elasticsearch-plugin list | grep -q analysis-phonetic || yes | elasticsearch-plugin install analysis-phonetic; /usr/local/bin/docker-entrypoint.sh 'eswrapper'"
+        #command: sh -c "elasticsearch-plugin list | grep -q analysis-icu || yes | elasticsearch-plugin install analysis-icu && elasticsearch-plugin list | grep -q analysis-phonetic || yes | elasticsearch-plugin install analysis-phonetic; /usr/local/bin/docker-entrypoint.sh 'eswrapper'"
 
     mail:
         image: mailhog/mailhog:latest
@@ -306,8 +318,8 @@ volumes:
             type: none
             device: ${DIRECTORY_PATH}/database/phpmyadmin/sql
             o: bind
-    dtredis:
-        name: redis-data
+    dtvalkey:
+        name: valkey-data
     certbot-etc:
         external: true
     certbot-var:
