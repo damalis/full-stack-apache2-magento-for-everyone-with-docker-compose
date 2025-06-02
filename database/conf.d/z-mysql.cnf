@@ -1,1 +1,8 @@
 [mysql]
+
+[mysqld]
+innodb_buffer_pool_instances=8
+innodb_buffer_pool_size=128MB
+max_connections=150
+innodb_thread_concurrency=0
+log_bin_trust_function_creators=1

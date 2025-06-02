@@ -1,0 +1,7 @@
+[mysql]
+
+[mysqld]
+innodb_use_native_aio = OFF
+innodb_buffer_pool_size = 128MB
+max_connections = 150
+log_bin_trust_function_creators = 1
