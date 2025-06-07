@@ -79,7 +79,7 @@ services:
 
     certbot:
         depends_on:
-            - varnish
+            - webserver
         image: certbot/certbot:latest
         container_name: certbot
         networks:
@@ -162,10 +162,13 @@ services:
               source: ./database/conf.d/z-${DATABASE_IMAGE_NAME}.cnf
               target: '${MYSQL_CONF_PREFIX}/z-${DATABASE_IMAGE_NAME}.cnf'
             - 'phpmyadmin-sql:/docker-entrypoint-initdb.d'
+            - '/sys/fs/cgroup/memory.pressure:/sys/fs/cgroup/memory.pressure'
         hostname: database
         restart: unless-stopped
         ports:
             - '3306:3306'
+        security_opt:
+            - no-new-privileges:true
         healthcheck:
             test: ["CMD-SHELL", "${DATABASE_ADMIN_COMMANDLINE} ping --silent || exit 1"]
             interval: 5s
@@ -256,7 +259,6 @@ services:
             DISABLE_SECURITY_PLUGIN: true
             OPENSEARCH_JAVA_OPTS: '-Xms512m -Xmx512m'
             TZ: '${LOCAL_TIMEZONE}'
-        #command: sh -c "elasticsearch-plugin list | grep -q analysis-icu || yes | elasticsearch-plugin install analysis-icu && elasticsearch-plugin list | grep -q analysis-phonetic || yes | elasticsearch-plugin install analysis-phonetic; /usr/local/bin/docker-entrypoint.sh 'eswrapper'"
 
     mail:
         image: mailhog/mailhog:latest
