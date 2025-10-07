@@ -125,7 +125,7 @@ chmod +x install.sh
 
 ### Manual
 
-## Requirements
+#### Requirements
 
 Make sure you have the latest versions of **Docker** and **Docker Compose** installed on your machine.
 
