@@ -242,7 +242,7 @@ services:
         command: "-a http=:8080,HTTP -p default_ttl=3600 -n /tmp/varnish_workdir"
 
     opensearch:
-        image: opensearchproject/opensearch:2.19.2
+        image: opensearchproject/opensearch:3.4.0
         container_name: opensearch
         networks:
             - backend
