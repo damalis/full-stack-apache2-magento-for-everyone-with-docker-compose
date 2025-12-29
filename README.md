@@ -84,7 +84,7 @@ Get your authentication keys: [https://experienceleague.adobe.com/docs/commerce-
 
 The following requirements and recommendations apply when running Opensearch in Docker in production.
 
-[https://docs.opensearch.org/docs/2.19/install-and-configure/install-opensearch/index/#important-settings](https://docs.opensearch.org/docs/2.19/install-and-configure/install-opensearch/index/#important-settings)
+[https://opensearch.org/blog/error-logs/error-log-max-virtual-memory-areas-vm-max_map_count-is-too-low/](https://opensearch.org/blog/error-logs/error-log-max-virtual-memory-areas-vm-max_map_count-is-too-low/)
 
 #### 4 GB RAM (8 GB recommended) and CPU 2 cores (2 GHz each) (4 cores (2 GHz or more each) recommended)
 
