@@ -177,7 +177,8 @@ sleep 2
 
 if [ "$lpms" == "apk" ]
 then
-	sudo apk add --update docker openrc bind-tools
+	sudo apk update
+	sudo apk add --update docker openrc bind-tools procps
 	sudo rc-update add docker boot
 	sudo service docker start
 elif [ "$lpms" == "dnf" ]
@@ -186,7 +187,7 @@ then
 	sudo dnf -y install dnf-plugins-core yum-utils openssl-libs
 	if [ "$ID" == "fedora" ] || ([ "$ID" == "rhel" ] && [ "$unamem" == "s390x" ])
 	then
-		sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/$ID/docker-ce.repo
+		sudo dnf config-manager addrepo --overwrite --from-repofile=https://download.docker.com/linux/$ID/docker-ce.repo
 	elif [ "$ID" == "rhel" ] || [ "$id_like" == "rhel" ]
 	then
 		sudo dnf config-manager --add-repo https://download.docker.com/linux/rhel/docker-ce.repo
@@ -236,7 +237,7 @@ then
 	sudo $lpms update
 	sudo $lpms -y install ca-certificates curl gnupg lsb-release
 	sudo mkdir -m 0755 /etc/apt/keyrings
-	sudo curl -fsSL https://download.docker.com/linux/$operation_system/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+	sudo curl -fsSL https://download.docker.com/linux/$operation_system/gpg | sudo gpg --batch --yes --dearmor -o /etc/apt/keyrings/docker.gpg
 	sudo chmod a+r /etc/apt/keyrings/docker.gpg
 	# Add the repository to Apt sources:
 	echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$operation_system $codename stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
@@ -401,6 +402,7 @@ then
 	: ${domain_name:=localhost}
 	[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "grep -qxF '127.0.1.1  $domain_name' /etc/hosts || echo '127.0.1.1  $domain_name' >> /etc/hosts"
 	ping -c 1 $domain_name 2>&1 > /dev/null
+	sudo -- sh -c -e "grep -qxF '127.0.1.1  mail.$domain_name' /etc/hosts || echo '127.0.1.1  mail.$domain_name' >> /etc/hosts"
 else
 	domain_name=""
 	read -p 'Enter Domain Name(e.g. : example.com): ' domain_name
@@ -420,6 +422,7 @@ do
 		: ${domain_name:=localhost}
 		[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "grep -qxF '127.0.1.1  $domain_name' /etc/hosts || echo '127.0.1.1  $domain_name' >> /etc/hosts"
 		ping -c 1 $domain_name 2>&1 > /dev/null
+		sudo -- sh -c -e "grep -qxF '127.0.1.1  mail.$domain_name' /etc/hosts || echo '127.0.1.1  mail.$domain_name' >> /etc/hosts"
 	else
 		read -p 'Enter Domain Name(e.g. : example.com): ' domain_name
 		#[ "$domain_name" != "localhost" ] && sudo -- sh -c -e "sed -i '/$domain_name/d' /etc/hosts"
