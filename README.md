@@ -80,12 +80,6 @@ Use your Commerce Marketplace account to generate a pair of 32-character authent
 
 Get your authentication keys: [https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en](https://experienceleague.adobe.com/docs/commerce-operations/installation-guide/prerequisites/authentication-keys.html?lang=en)
 
-#### How you set vm.max_map_count depends on your platform
-
-The following requirements and recommendations apply when running Opensearch in Docker in production.
-
-[https://opensearch.org/blog/error-logs/error-log-max-virtual-memory-areas-vm-max_map_count-is-too-low/](https://opensearch.org/blog/error-logs/error-log-max-virtual-memory-areas-vm-max_map_count-is-too-low/)
-
 #### 4 GB RAM (8 GB recommended) and CPU 2 cores (2 GHz each) (4 cores (2 GHz or more each) recommended)
 
 Upgrading the applications and extensions you obtain from the Commerce Marketplace and other sources can require up to 4 GB of RAM. If you are using a system with less than 4 GB of RAM, we recommend you create a [swap file](https://www.digitalocean.com/community/tutorials/how-to-add-swap-space-on-ubuntu-20-04); otherwise, your install might fail.
@@ -139,6 +133,12 @@ Make sure you have the latest versions of **Docker** and **Docker Compose** inst
 Clone this repository or copy the files from this repository into a new folder.
 
 Make sure to [add your user to the `docker` group](https://docs.docker.com/install/linux/linux-postinstall/#manage-docker-as-a-non-root-user).
+
+#### How you set vm.max_map_count depends on your platform
+
+The following requirements and recommendations apply when running Opensearch in Docker in production.
+
+[https://opensearch.org/blog/error-logs/error-log-max-virtual-memory-areas-vm-max_map_count-is-too-low/](https://opensearch.org/blog/error-logs/error-log-max-virtual-memory-areas-vm-max_map_count-is-too-low/)
 
 #### Configuration
 
