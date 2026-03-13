@@ -272,6 +272,16 @@ then
 	exit 0
 fi
 
+# fixed; Error log: "max virtual memory areas vm.max_map_count […] is too low"
+mmc_output=$(cat /proc/sys/vm/max_map_count 2>&1)
+if [ $mmc_output -lt 262144 ]
+then
+	sudo sysctl -w vm.max_map_count=262144
+	echo "vm.max_map_count = 262144" | sudo tee -a /etc/sysctl.conf > /dev/null
+	# Apply sysctl params without reboot
+	sudo sysctl --system > /dev/null 2>&1
+fi
+
 # fixed; WARNING Memory overcommit must be enabled!
 oc_output=$(cat /proc/sys/vm/overcommit_memory 2>&1)
 if [ $oc_output != 1 ]
