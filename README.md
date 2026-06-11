@@ -58,7 +58,7 @@ Plus, manage docker containers with Portainer.
 - [valkey](https://hub.docker.com/r/valkey/valkey)
 - [varnish](https://hub.docker.com/_/varnish)
 - [opensearch](https://hub.docker.com/r/opensearchproject/opensearch)
-- [mailhog](https://github.com/mailhog)
+- [MailHog](https://github.com/mailhog)
 - [backup](https://hub.docker.com/r/offen/docker-volume-backup)
 
 #### For certbot (letsencrypt) certificate:
@@ -399,7 +399,7 @@ add and/or remove magento site folders and files with any ftp client program in 
 
 #### Webserver
 
-add or remove code in the ```./webserver/extra/httpd-ssl.conf``` file for custom apache2/httpd configurations
+add or remove code in the ```./webserver/conf/extra/httpd-ssl.conf``` file for custom apache2/httpd configurations
 
 [https://httpd.apache.org/docs/2.4/](https://httpd.apache.org/docs/2.4/)
 
